@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: medhapath
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+
+# NOTE ON DATA PERSISTENCE (free tier):
+# Render's free plan does not support attaching a persistent disk, so
+# medhapath.db lives on the container's ephemeral filesystem. It works fine
+# while the service is running, but resets to seed data on every redeploy
+# and whenever the free service spins down from inactivity and restarts.
+#
+# To keep data permanently, upgrade the service to a paid plan (Starter or
+# above) on Render's dashboard, then add this back:
+#
+#     disk:
+#       name: medhapath-data
+#       mountPath: /opt/render/project/src/data
+#       sizeGB: 1
+#
+# ...and add this env var so the app writes there instead of the default:
+#
+#     - key: DATA_DIR
+#       value: /opt/render/project/src/data

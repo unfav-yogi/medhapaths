@@ -1,0 +1,13 @@
+services:
+  medhapath:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - SECRET_KEY=change-this-to-a-long-random-string
+    volumes:
+      - medhapath-data:/app/data
+
+volumes:
+  medhapath-data:
